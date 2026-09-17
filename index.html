@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Photo Writing Room</title>
+
+<style>
+
+/* =========================
+   GENERAL
+========================= */
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background: black;
+    font-family: "Georgia", serif;
+}
+
+
+/* =========================
+   BACKGROUND PHOTOS
+========================= */
+
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.background img {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    opacity: 0;
+
+    transition: opacity 2s ease-in-out;
+}
+
+.background img.active {
+    opacity: 1;
+}
+
+
+/* =========================
+   WRITING BOX
+========================= */
+
+#box {
+    position: absolute;
+
+    top: 20%;
+    left: 20%;
+
+    width: 60%;
+    height: 40%;
+
+    color: white;
+
+    font-size: 20px;
+    font-weight: bold;
+
+    line-height: 1.6;
+
+    background: transparent;
+
+    padding: 30px;
+
+    border-radius: 15px;
+
+    outline: none;
+
+    cursor: text;
+
+    /*
+       Subtle black outline around letters
+    */
+    text-shadow:
+        -1px -1px 0 black,
+         1px -1px 0 black,
+        -1px  1px 0 black,
+         1px  1px 0 black;
+}
+
+
+/* =========================
+   TEXT SELECTION
+========================= */
+
+::selection {
+    background: rgba(255,255,255,0.3);
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- =========================
+     BACKGROUND PHOTOS
+========================= -->
+
+<div class="background">
+
+    <img src="photo1.jpg" class="active">
+    <img src="photo2.jpg">
+    <img src="photo3.jpg">
+    <img src="photo4.jpg">
+    <img src="photo5.jpg">
+    <img src="photo6.jpg">
+    <img src="photo7.jpg">
+    <img src="photo8.jpg">
+    <img src="photo9.jpg">
+    <img src="photo10.jpg">
+
+</div>
+
+
+<!-- =========================
+     WRITING AREA
+========================= -->
+
+<div id="box" contenteditable="true">
+Write your thoughts here...
+</div>
+
+
+<script>
+
+
+/* =========================
+   SAVE WRITING AUTOMATICALLY
+========================= */
+
+let box = document.getElementById("box");
+
+let savedText =
+    localStorage.getItem("myWriting");
+
+
+if (savedText) {
+
+    box.innerHTML = savedText;
+
+}
+
+
+box.addEventListener("input", function() {
+
+    localStorage.setItem(
+        "myWriting",
+        box.innerHTML
+    );
+
+});
+
+
+/* =========================
+   PHOTO SLIDESHOW
+========================= */
+
+const photos =
+    document.querySelectorAll(".background img");
+
+let currentPhoto = 0;
+
+
+/*
+    Each photo stays visible
+    for 10 seconds.
+*/
+
+const DISPLAY_TIME =
+    10 * 1000;
+
+
+/*
+    Change to the next photo.
+*/
+
+function changePhoto() {
+
+    photos[currentPhoto]
+        .classList
+        .remove("active");
+
+    currentPhoto++;
+
+
+    /*
+        After photo 10,
+        return to photo 1.
+    */
+
+    if (currentPhoto >= photos.length) {
+
+        currentPhoto = 0;
+
+    }
+
+
+    photos[currentPhoto]
+        .classList
+        .add("active");
+
+}
+
+
+/*
+    Change photo every 10 seconds.
+*/
+
+setInterval(
+    changePhoto,
+    DISPLAY_TIME
+);
+
+
+</script>
+
+</body>
+
+</html>
